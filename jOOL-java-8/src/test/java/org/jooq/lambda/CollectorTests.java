@@ -993,6 +993,11 @@ public class CollectorTests {
         assertEquals(Seq.of("c", "d").toList(), Seq.of("a", "b", "c", "d").collect(Agg.dropping(2)).toList());
     }
 
+    //CS304 (manually written) Issue link: https://github.com/jOOQ/jOOL/issues/360
+    /**
+     * Test the Seq with numbers.
+     * @result The output will be the standard deviation and variance.
+    */
     @Test
     public void testStddevAndVarianceWithNumber() {
         DecimalFormat df = new java.text.DecimalFormat("#.000");
@@ -1013,6 +1018,11 @@ public class CollectorTests {
 
     }
 
+    //CS304 (manually written) Issue link: https://github.com/jOOQ/jOOL/issues/360
+    /**
+     * Test the Seq with numbers.
+     * @result The output will be the standard deviation and variance.
+    */
     @Test
     public void testStddevAndVarianceWithObject() {
         DecimalFormat df = new java.text.DecimalFormat("#.000");

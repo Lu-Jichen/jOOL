@@ -977,6 +977,8 @@ public class Agg {
         );
     }
 
+
+    //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/360
     /**
      * Calculate the variance of objects with mapping function from object to double value,
      * with given list, size and mapping function.
@@ -996,7 +998,7 @@ public class Agg {
      * @author Jichen Lu
      * @date 2021-04-25
      */
-    public static <T> double getVariance(
+    private static <T> double getVariance(
             Function<? super T, Double> function,
             ArrayList<T> l, int size) {
         double sum = 0.0;
@@ -1017,6 +1019,7 @@ public class Agg {
     }
 
 
+    //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/360
     /**
      * Calculate the variance of the given object collectors,
      * based on the mapping function from object to double number.
@@ -1069,6 +1072,7 @@ public class Agg {
     }
 
 
+    //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/360
     /**
      * Calculate the variance of the given object collectors,
      * based on the mapping function from object to double number.
