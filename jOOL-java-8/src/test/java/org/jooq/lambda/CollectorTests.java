@@ -996,7 +996,7 @@ public class CollectorTests {
     //CS304 (manually written) Issue link: https://github.com/jOOQ/jOOL/issues/360
     /**
      * Test the Seq with numbers.
-     * @result The output will be the standard deviation and variance.
+     * @result The result will be the standard deviation and variance.
     */
     @Test
     public void testStddevAndVarianceWithNumber() {
@@ -1021,7 +1021,7 @@ public class CollectorTests {
     //CS304 (manually written) Issue link: https://github.com/jOOQ/jOOL/issues/360
     /**
      * Test the Seq with numbers.
-     * @result The output will be the standard deviation and variance.
+     * @result The result will be the standard deviation and variance.
     */
     @Test
     public void testStddevAndVarianceWithObject() {
