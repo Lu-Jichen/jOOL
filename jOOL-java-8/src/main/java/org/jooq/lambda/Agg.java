@@ -1118,4 +1118,143 @@ public class Agg {
                 }
         );
     }
+
+
+    //    linear regression
+    public static <T> Collector<T, ?, Optional<Double>> regrSlopeBy(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
+        class Accumulator{
+            Integer n;
+            Double sumXY;
+            Double sumXX;
+            Double sumX;
+            Double sumY;
+        }
+
+        return Collector.of(
+                () -> new Accumulator(),
+                (a,t) -> {
+                    Double x = (Double) functionX.apply(t);
+                    Double y = (Double) functionY.apply(t);
+                    a.n++;
+                    a.sumXY+=x*y;
+                    a.sumXX+=x*x;
+                    a.sumX+=x;
+                    a.sumY+=y;
+                },
+                (a1, a2) -> {
+                    a1.sumX += a2.sumX;
+                    a1.sumY+=a2.sumY;
+                    a1.sumXX+=a2.sumXX;
+                    a1.sumXY+=a2.sumXY;
+                    return a1;
+                },
+                a -> {
+                    if (a.n == 0) {
+                        return Optional.empty();
+                    }
+                    return Optional.of((a.sumXY-a.sumX*a.sumY/a.n)/(a.sumXX-a.sumX*a.sumX/a.n));
+
+                }
+        );
+    }
+
+
+    public static <T> Collector<T, ?, Optional<Double>> regrInterceptBy(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
+        class Accumulator{
+            Integer n;
+            Double sumXY;
+            Double sumXX;
+            Double sumX;
+            Double sumY;
+        }
+
+        return Collector.of(
+                () -> new Accumulator(),
+                (a,t) -> {
+                    Double x = (Double) functionX.apply(t);
+                    Double y = (Double) functionY.apply(t);
+                    a.n++;
+                    a.sumXY+=x*y;
+                    a.sumXX+=x*x;
+                    a.sumX+=x;
+                    a.sumY+=y;
+                },
+                (a1, a2) -> {
+                    a1.sumX += a2.sumX;
+                    a1.sumY+=a2.sumY;
+                    a1.sumXX+=a2.sumXX;
+                    a1.sumXY+=a2.sumXY;
+                    return a1;
+                },
+                a -> {
+                    if (a.n == 0) {
+                        return Optional.empty();
+                    }
+                    return Optional.of(a.sumY/a.n-(a.sumXY-a.sumX*a.sumY/a.n)/(a.sumXX-a.sumX*a.sumX/a.n)*a.sumX/a.n);
+
+                }
+        );
+    }
+
+    public static <T> Collector<T, ?, Optional<Double>> regrR2By(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
+        class Accumulator{
+            Integer n;
+            Double sumXY;
+            Double sumXX;
+            Double sumYY;
+            Double sumX;
+            Double sumY;
+
+            ArrayList<Double> listX;
+            ArrayList<Double> listY;
+        }
+
+        return Collector.of(
+                () -> new Accumulator(),
+                (a,t) -> {
+                    Double x = (Double) functionX.apply(t);
+                    Double y = (Double) functionY.apply(t);
+                    a.listX.add(x);
+                    a.listY.add(y);
+                    a.n++;
+                    a.sumXY+=x*y;
+                    a.sumXX+=x*x;
+                    a.sumYY+=y*y;
+                    a.sumX+=x;
+                    a.sumY+=y;
+                },
+                (a1, a2) -> {
+                    a1.listX.addAll(a2.listX);
+                    a1.listY.addAll(a2.listY);
+                    a1.sumX += a2.sumX;
+                    a1.sumY+=a2.sumY;
+                    a1.sumXX+=a2.sumXX;
+                    a1.sumYY+=a2.sumYY;
+                    a1.sumXY+=a2.sumXY;
+                    return a1;
+                },
+                a -> {
+                    if (a.n == 0 || (a.sumXX-a.sumX*a.sumX/a.n)==0.0) {
+                        return Optional.empty();
+                    }
+                    if ((a.sumYY-a.sumY*a.sumY/a.n)==0.0){
+                        return Optional.of(1.0);
+                    }else {
+                        Double stdX=0.0;
+                        Double stdY=0.0;
+                        Double avgX = a.sumX/a.n;
+                        Double avgY = a.sumY/a.n;
+                        for (Double x: a.listX){
+                            stdX+=Math.pow((x-avgX),2);
+                        }
+                        stdX = Math.sqrt(stdX/a.n);
+                        for (Double y: a.listY){
+                            stdY+=Math.pow((y-avgY),2);
+                        }
+                        stdY = Math.sqrt(stdY/a.n);
+                        return Optional.of(Math.sqrt((a.sumXY-a.sumX*a.sumY/a.n)/(stdX*stdY)));
+                    }
+                }
+        );
+    }
 }
