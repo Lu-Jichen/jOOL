@@ -1120,18 +1120,8 @@ public class Agg {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/151
+
     /**
      * Calculate the linear regression function Slope of the given object collectors,
      * based on the mapping function from object to double number.
@@ -1159,8 +1149,8 @@ public class Agg {
      * @author Jichen Lu
      * @date 2021-05-17
      */
-    public static <T> Collector<T, ?, Optional<Double>> regrSlopeBy(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
-        class Accumulator{
+    public static <T> Collector<T, ?, Optional<Double>> regrSlopeBy(Function<? super T, ? extends Number> functionX, Function<? super T, ? extends Number> functionY) {
+        class Accumulator {
             Integer n = 0;
             Double sumXY = 0.0;
             Double sumXX = 0.0;
@@ -1170,29 +1160,29 @@ public class Agg {
 
         return Collector.of(
                 () -> new Accumulator(),
-                (a,t) -> {
+                (a, t) -> {
                     Double x = (Double) functionX.apply(t);
                     Double y = (Double) functionY.apply(t);
 
                     a.n++;
-                    a.sumXY+=x*y;
-                    a.sumXX+=x*x;
-                    a.sumX+=x;
-                    a.sumY+=y;
+                    a.sumXY += x * y;
+                    a.sumXX += x * x;
+                    a.sumX += x;
+                    a.sumY += y;
                 },
                 (a1, a2) -> {
-                    a1.n+=a2.n;
+                    a1.n += a2.n;
                     a1.sumX += a2.sumX;
-                    a1.sumY+=a2.sumY;
-                    a1.sumXX+=a2.sumXX;
-                    a1.sumXY+=a2.sumXY;
+                    a1.sumY += a2.sumY;
+                    a1.sumXX += a2.sumXX;
+                    a1.sumXY += a2.sumXY;
                     return a1;
                 },
                 a -> {
-                    if (a.n == 0 || a.n==1) {
+                    if (a.n == 0 || a.n == 1) {
                         return Optional.empty();
                     }
-                    if ((a.sumXX-a.sumX*a.sumX/a.n)==0.0){
+                    if ((a.sumXX - a.sumX * a.sumX / a.n) == 0.0) {
 //                        if (a.sumX==0){
 //                            if (a.sumY==0){
 //                                return Optional.of(0.0);
@@ -1203,16 +1193,15 @@ public class Agg {
 //                        return Optional.of(a.sumY/a.sumX);
                         return Optional.of(0.0);
                     }
-                    return Optional.of((a.sumXY-a.sumX*a.sumY/a.n)/(a.sumXX-a.sumX*a.sumX/a.n));
+                    return Optional.of((a.sumXY - a.sumX * a.sumY / a.n) / (a.sumXX - a.sumX * a.sumX / a.n));
 
                 }
         );
     }
 
 
-
-
     //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/151
+
     /**
      * Calculate the linear regression function Intercept of the given object collectors,
      * based on the mapping function from object to double number.
@@ -1240,8 +1229,8 @@ public class Agg {
      * @author Jichen Lu
      * @date 2021-05-17
      */
-    public static <T> Collector<T, ?, Optional<Double>> regrInterceptBy(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
-        class Accumulator{
+    public static <T> Collector<T, ?, Optional<Double>> regrInterceptBy(Function<? super T, ? extends Number> functionX, Function<? super T, ? extends Number> functionY) {
+        class Accumulator {
             Integer n = 0;
             Double sumXY = 0.0;
             Double sumXX = 0.0;
@@ -1251,32 +1240,32 @@ public class Agg {
 
         return Collector.of(
                 () -> new Accumulator(),
-                (a,t) -> {
+                (a, t) -> {
                     Double x = (Double) functionX.apply(t);
                     Double y = (Double) functionY.apply(t);
                     a.n++;
-                    a.sumXY+=x*y;
-                    a.sumXX+=x*x;
-                    a.sumX+=x;
-                    a.sumY+=y;
+                    a.sumXY += x * y;
+                    a.sumXX += x * x;
+                    a.sumX += x;
+                    a.sumY += y;
                 },
                 (a1, a2) -> {
-                    a1.n+=a2.n;
+                    a1.n += a2.n;
                     a1.sumX += a2.sumX;
-                    a1.sumY+=a2.sumY;
-                    a1.sumXX+=a2.sumXX;
-                    a1.sumXY+=a2.sumXY;
+                    a1.sumY += a2.sumY;
+                    a1.sumXX += a2.sumXX;
+                    a1.sumXY += a2.sumXY;
                     return a1;
                 },
                 a -> {
-                    if (a.n == 0 || a.n==1)  {
+                    if (a.n == 0 || a.n == 1) {
                         return Optional.empty();
                     }
-                    if ((a.sumXX-a.sumX*a.sumX/a.n)==0.0){
+                    if ((a.sumXX - a.sumX * a.sumX / a.n) == 0.0) {
 //                        return Optional.of(0.0);
-                        return Optional.of(a.sumY/a.n);
+                        return Optional.of(a.sumY / a.n);
                     }
-                    return Optional.of(a.sumY/a.n-(a.sumXY-a.sumX*a.sumY/a.n)/(a.sumXX-a.sumX*a.sumX/a.n)*a.sumX/a.n);
+                    return Optional.of(a.sumY / a.n - (a.sumXY - a.sumX * a.sumY / a.n) / (a.sumXX - a.sumX * a.sumX / a.n) * a.sumX / a.n);
 
                 }
         );
@@ -1284,6 +1273,7 @@ public class Agg {
 
 
     //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/151
+
     /**
      * Calculate the linear regression function R2 of the given object collectors,
      * based on the mapping function from object to double number.
@@ -1311,8 +1301,8 @@ public class Agg {
      * @author Jichen Lu
      * @date 2021-05-17
      */
-    public static <T> Collector<T, ?, Optional<Double>> regrR2By(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
-        class Accumulator{
+    public static <T> Collector<T, ?, Optional<Double>> regrR2By(Function<? super T, ? extends Number> functionX, Function<? super T, ? extends Number> functionY) {
+        class Accumulator {
             Integer n = 0;
             Double sumXY = 0.0;
             Double sumXX = 0.0;
@@ -1326,58 +1316,57 @@ public class Agg {
 
         return Collector.of(
                 () -> new Accumulator(),
-                (a,t) -> {
+                (a, t) -> {
                     Double x = (Double) functionX.apply(t);
                     Double y = (Double) functionY.apply(t);
                     a.listX.add(x);
                     a.listY.add(y);
                     a.n++;
-                    a.sumXY+=x*y;
-                    a.sumXX+=x*x;
-                    a.sumYY+=y*y;
-                    a.sumX+=x;
-                    a.sumY+=y;
+                    a.sumXY += x * y;
+                    a.sumXX += x * x;
+                    a.sumYY += y * y;
+                    a.sumX += x;
+                    a.sumY += y;
                 },
                 (a1, a2) -> {
-                    a1.n+=a2.n;
+                    a1.n += a2.n;
                     a1.listX.addAll(a2.listX);
                     a1.listY.addAll(a2.listY);
                     a1.sumX += a2.sumX;
-                    a1.sumY+=a2.sumY;
-                    a1.sumXX+=a2.sumXX;
-                    a1.sumYY+=a2.sumYY;
-                    a1.sumXY+=a2.sumXY;
+                    a1.sumY += a2.sumY;
+                    a1.sumXX += a2.sumXX;
+                    a1.sumYY += a2.sumYY;
+                    a1.sumXY += a2.sumXY;
                     return a1;
                 },
                 a -> {
 
-                    if (a.n == 0 || a.n==1) {
+                    if (a.n == 0 || a.n == 1) {
                         return Optional.empty();
                     }
 
 
-
                     Double slope = 0.0;
                     Double intercept = 0.0;
-                    if ((a.sumXX-a.sumX*a.sumX/a.n)==0.0){
-                        intercept = a.sumY/a.n;
+                    if ((a.sumXX - a.sumX * a.sumX / a.n) == 0.0) {
+                        intercept = a.sumY / a.n;
                         slope = 0.0;
-                    }else {
-                        slope = ((a.sumXY-a.sumX*a.sumY/a.n)/(a.sumXX-a.sumX*a.sumX/a.n));
-                        intercept = a.sumY/a.n-(a.sumXY-a.sumX*a.sumY/a.n)/(a.sumXX-a.sumX*a.sumX/a.n)*a.sumX/a.n;
+                    } else {
+                        slope = ((a.sumXY - a.sumX * a.sumY / a.n) / (a.sumXX - a.sumX * a.sumX / a.n));
+                        intercept = a.sumY / a.n - (a.sumXY - a.sumX * a.sumY / a.n) / (a.sumXX - a.sumX * a.sumX / a.n) * a.sumX / a.n;
                     }
 
-                    Double avgY = a.sumY/a.n;
+                    Double avgY = a.sumY / a.n;
                     Double sstot = 0.0;
                     Double ssreg = 0.0;
-                    for (int i = 0; i < a.listY.size(); i++){
-                        sstot+=Math.pow((a.listY.get(i) -avgY),2);
-                        ssreg+=Math.pow(slope*a.listX.get(i)+intercept-a.listY.get(i),2);
+                    for (int i = 0; i < a.listY.size(); i++) {
+                        sstot += Math.pow((a.listY.get(i) - avgY), 2);
+                        ssreg += Math.pow(slope * a.listX.get(i) + intercept - a.listY.get(i), 2);
                     }
-                    if (sstot==0.0){
+                    if (sstot == 0.0) {
                         return Optional.of(1.0);
-                    }else {
-                        return Optional.of(1-ssreg/sstot);
+                    } else {
+                        return Optional.of(1 - ssreg / sstot);
                     }
 
                 }
@@ -1385,8 +1374,8 @@ public class Agg {
     }
 
 
-
     //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/151
+
     /**
      * Calculate the linear regression function Count of the given object collectors,
      * based on the mapping function from object to double number.
@@ -1414,20 +1403,20 @@ public class Agg {
      * @author Jichen Lu
      * @date 2021-05-17
      */
-    public static <T> Collector<T, ?, Optional<Double>> regrCountBy(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
-        class Accumulator{
+    public static <T> Collector<T, ?, Optional<Double>> regrCountBy(Function<? super T, ? extends Number> functionX, Function<? super T, ? extends Number> functionY) {
+        class Accumulator {
             Integer n = 0;
         }
 
         return Collector.of(
                 () -> new Accumulator(),
-                (a,t) -> {
+                (a, t) -> {
                     Double x = (Double) functionX.apply(t);
                     Double y = (Double) functionY.apply(t);
                     a.n++;
                 },
                 (a1, a2) -> {
-                    a1.n+=a2.n;
+                    a1.n += a2.n;
                     return a1;
                 },
                 a -> {
@@ -1437,8 +1426,8 @@ public class Agg {
     }
 
 
-
     //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/151
+
     /**
      * Calculate the linear regression function AvgX of the given object collectors,
      * based on the mapping function from object to double number.
@@ -1466,8 +1455,8 @@ public class Agg {
      * @author Jichen Lu
      * @date 2021-05-17
      */
-    public static <T> Collector<T, ?, Optional<Double>> regrAvgXBy(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
-        class Accumulator{
+    public static <T> Collector<T, ?, Optional<Double>> regrAvgXBy(Function<? super T, ? extends Number> functionX, Function<? super T, ? extends Number> functionY) {
+        class Accumulator {
             Integer n = 0;
             Double sumX = 0.0;
             Double sumY = 0.0;
@@ -1475,31 +1464,31 @@ public class Agg {
 
         return Collector.of(
                 () -> new Accumulator(),
-                (a,t) -> {
+                (a, t) -> {
                     Double x = (Double) functionX.apply(t);
                     Double y = (Double) functionY.apply(t);
                     a.n++;
-                    a.sumX+=x;
-                    a.sumY+=y;
+                    a.sumX += x;
+                    a.sumY += y;
                 },
                 (a1, a2) -> {
-                    a1.n+=a2.n;
+                    a1.n += a2.n;
                     a1.sumX += a2.sumX;
-                    a1.sumY+=a2.sumY;
+                    a1.sumY += a2.sumY;
                     return a1;
                 },
                 a -> {
-                    if (a.n==0){
+                    if (a.n == 0) {
                         return Optional.empty();
                     }
-                    return Optional.of(a.sumX/a.n);
+                    return Optional.of(a.sumX / a.n);
                 }
         );
     }
 
 
-
     //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/151
+
     /**
      * Calculate the linear regression function AvgY of the given object collectors,
      * based on the mapping function from object to double number.
@@ -1527,8 +1516,8 @@ public class Agg {
      * @author Jichen Lu
      * @date 2021-05-17
      */
-    public static <T> Collector<T, ?, Optional<Double>> regrAvgYBy(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
-        class Accumulator{
+    public static <T> Collector<T, ?, Optional<Double>> regrAvgYBy(Function<? super T, ? extends Number> functionX, Function<? super T, ? extends Number> functionY) {
+        class Accumulator {
             Integer n = 0;
             Double sumX = 0.0;
             Double sumY = 0.0;
@@ -1536,34 +1525,31 @@ public class Agg {
 
         return Collector.of(
                 () -> new Accumulator(),
-                (a,t) -> {
+                (a, t) -> {
                     Double x = (Double) functionX.apply(t);
                     Double y = (Double) functionY.apply(t);
                     a.n++;
-                    a.sumX+=x;
-                    a.sumY+=y;
+                    a.sumX += x;
+                    a.sumY += y;
                 },
                 (a1, a2) -> {
-                    a1.n+=a2.n;
+                    a1.n += a2.n;
                     a1.sumX += a2.sumX;
-                    a1.sumY+=a2.sumY;
+                    a1.sumY += a2.sumY;
                     return a1;
                 },
                 a -> {
-                    if (a.n==0){
+                    if (a.n == 0) {
                         return Optional.empty();
                     }
-                    return Optional.of(a.sumY/a.n);
+                    return Optional.of(a.sumY / a.n);
                 }
         );
     }
 
 
-
-
-
-
     //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/151
+
     /**
      * Calculate the linear regression function SXX of the given object collectors,
      * based on the mapping function from object to double number.
@@ -1591,8 +1577,8 @@ public class Agg {
      * @author Jichen Lu
      * @date 2021-05-17
      */
-    public static <T> Collector<T, ?, Optional<Double>> regrSxxBy(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
-        class Accumulator{
+    public static <T> Collector<T, ?, Optional<Double>> regrSxxBy(Function<? super T, ? extends Number> functionX, Function<? super T, ? extends Number> functionY) {
+        class Accumulator {
             Integer n = 0;
             Double sumXY = 0.0;
             Double sumXX = 0.0;
@@ -1606,27 +1592,27 @@ public class Agg {
 
         return Collector.of(
                 () -> new Accumulator(),
-                (a,t) -> {
+                (a, t) -> {
                     Double x = (Double) functionX.apply(t);
                     Double y = (Double) functionY.apply(t);
                     a.listX.add(x);
                     a.listY.add(y);
                     a.n++;
-                    a.sumXY+=x*y;
-                    a.sumXX+=x*x;
-                    a.sumYY+=y*y;
-                    a.sumX+=x;
-                    a.sumY+=y;
+                    a.sumXY += x * y;
+                    a.sumXX += x * x;
+                    a.sumYY += y * y;
+                    a.sumX += x;
+                    a.sumY += y;
                 },
                 (a1, a2) -> {
-                    a1.n+=a2.n;
+                    a1.n += a2.n;
                     a1.listX.addAll(a2.listX);
                     a1.listY.addAll(a2.listY);
                     a1.sumX += a2.sumX;
-                    a1.sumY+=a2.sumY;
-                    a1.sumXX+=a2.sumXX;
-                    a1.sumYY+=a2.sumYY;
-                    a1.sumXY+=a2.sumXY;
+                    a1.sumY += a2.sumY;
+                    a1.sumXX += a2.sumXX;
+                    a1.sumYY += a2.sumYY;
+                    a1.sumXY += a2.sumXY;
                     return a1;
                 },
                 a -> {
@@ -1635,7 +1621,7 @@ public class Agg {
                         return Optional.empty();
                     }
 
-                    return Optional.of(a.sumXX-a.sumX*a.sumX/a.n);
+                    return Optional.of(a.sumXX - a.sumX * a.sumX / a.n);
 
 
                 }
@@ -1643,16 +1629,8 @@ public class Agg {
     }
 
 
-
-
-
-
-
-
-
-
-
     //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/151
+
     /**
      * Calculate the linear regression function SXY of the given object collectors,
      * based on the mapping function from object to double number.
@@ -1680,8 +1658,8 @@ public class Agg {
      * @author Jichen Lu
      * @date 2021-05-17
      */
-    public static <T> Collector<T, ?, Optional<Double>> regrSxyBy(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
-        class Accumulator{
+    public static <T> Collector<T, ?, Optional<Double>> regrSxyBy(Function<? super T, ? extends Number> functionX, Function<? super T, ? extends Number> functionY) {
+        class Accumulator {
             Integer n = 0;
             Double sumXY = 0.0;
             Double sumXX = 0.0;
@@ -1695,27 +1673,27 @@ public class Agg {
 
         return Collector.of(
                 () -> new Accumulator(),
-                (a,t) -> {
+                (a, t) -> {
                     Double x = (Double) functionX.apply(t);
                     Double y = (Double) functionY.apply(t);
                     a.listX.add(x);
                     a.listY.add(y);
                     a.n++;
-                    a.sumXY+=x*y;
-                    a.sumXX+=x*x;
-                    a.sumYY+=y*y;
-                    a.sumX+=x;
-                    a.sumY+=y;
+                    a.sumXY += x * y;
+                    a.sumXX += x * x;
+                    a.sumYY += y * y;
+                    a.sumX += x;
+                    a.sumY += y;
                 },
                 (a1, a2) -> {
-                    a1.n+=a2.n;
+                    a1.n += a2.n;
                     a1.listX.addAll(a2.listX);
                     a1.listY.addAll(a2.listY);
                     a1.sumX += a2.sumX;
-                    a1.sumY+=a2.sumY;
-                    a1.sumXX+=a2.sumXX;
-                    a1.sumYY+=a2.sumYY;
-                    a1.sumXY+=a2.sumXY;
+                    a1.sumY += a2.sumY;
+                    a1.sumXX += a2.sumXX;
+                    a1.sumYY += a2.sumYY;
+                    a1.sumXY += a2.sumXY;
                     return a1;
                 },
                 a -> {
@@ -1724,7 +1702,7 @@ public class Agg {
                         return Optional.empty();
                     }
 
-                    return Optional.of(a.sumXY-a.sumX*a.sumY/a.n);
+                    return Optional.of(a.sumXY - a.sumX * a.sumY / a.n);
 
 
                 }
@@ -1732,10 +1710,8 @@ public class Agg {
     }
 
 
-
-
-
     //CS304 Issue link: https://github.com/jOOQ/jOOL/issues/151
+
     /**
      * Calculate the linear regression function SYY of the given object collectors,
      * based on the mapping function from object to double number.
@@ -1763,8 +1739,8 @@ public class Agg {
      * @author Jichen Lu
      * @date 2021-05-17
      */
-    public static <T> Collector<T, ?, Optional<Double>> regrSyyBy(Function<? super T, ? extends Number> functionX,Function<? super T, ? extends Number> functionY) {
-        class Accumulator{
+    public static <T> Collector<T, ?, Optional<Double>> regrSyyBy(Function<? super T, ? extends Number> functionX, Function<? super T, ? extends Number> functionY) {
+        class Accumulator {
             Integer n = 0;
             Double sumXY = 0.0;
             Double sumXX = 0.0;
@@ -1778,27 +1754,27 @@ public class Agg {
 
         return Collector.of(
                 () -> new Accumulator(),
-                (a,t) -> {
+                (a, t) -> {
                     Double x = (Double) functionX.apply(t);
                     Double y = (Double) functionY.apply(t);
                     a.listX.add(x);
                     a.listY.add(y);
                     a.n++;
-                    a.sumXY+=x*y;
-                    a.sumXX+=x*x;
-                    a.sumYY+=y*y;
-                    a.sumX+=x;
-                    a.sumY+=y;
+                    a.sumXY += x * y;
+                    a.sumXX += x * x;
+                    a.sumYY += y * y;
+                    a.sumX += x;
+                    a.sumY += y;
                 },
                 (a1, a2) -> {
-                    a1.n+=a2.n;
+                    a1.n += a2.n;
                     a1.listX.addAll(a2.listX);
                     a1.listY.addAll(a2.listY);
                     a1.sumX += a2.sumX;
-                    a1.sumY+=a2.sumY;
-                    a1.sumXX+=a2.sumXX;
-                    a1.sumYY+=a2.sumYY;
-                    a1.sumXY+=a2.sumXY;
+                    a1.sumY += a2.sumY;
+                    a1.sumXX += a2.sumXX;
+                    a1.sumYY += a2.sumYY;
+                    a1.sumXY += a2.sumXY;
                     return a1;
                 },
                 a -> {
@@ -1807,7 +1783,7 @@ public class Agg {
                         return Optional.empty();
                     }
 
-                    return Optional.of(a.sumYY-a.sumY*a.sumY/a.n);
+                    return Optional.of(a.sumYY - a.sumY * a.sumY / a.n);
 
 
                 }
